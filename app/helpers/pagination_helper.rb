@@ -6,8 +6,11 @@ module PaginationHelper
     count = collection.count
     links = generate_links(base_url,count,@per_page,@page)
     response.headers["Link"] = links.join(",") if !links.empty?
-    collection.skip(@offset).limit(@per_page)
+    pageSize = @per_page
+    pageSize = count if @per_page == -1 
+    collection.skip(@offset).limit(pageSize)
   end
+
 
   def generate_links(base_url,count,per_page,page)
     links = []
