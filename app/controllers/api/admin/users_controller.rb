@@ -26,6 +26,26 @@ module Api
         users = User.all.ordered_by_username
         render json: paginate(admin_users_path,users)
       end
+            
+      api :GET, "/admin/users/:id/preferences", "Get user preferences by user id."
+      formats ['json']
+      description "Returns a user preferences in the database for the given user id."
+      def get_preferences
+        preferences = Preference.where(:user_id => params[:id]).first
+        render json: preferences
+      end
+
+      api :POST, "/admin/users/:id/preferences", "Update user preferences by user id."
+      formats ['json']
+      description "Updates preference and returns updated preference in the database for the given user id."
+      def update_preferences
+        preferences = Preference.where(:user_id => params[:id]).first
+	      preferences["selected_measure_ids"] = params[:selected_measure_ids] || []
+        preferences["dashboard_measure_ids"] = params[:dashboard_measure_ids] || []
+        preferences["measure_goals"] = params[:measure_goals] || []
+	      preferences.save
+        render json: preferences
+      end
 
       api :POST, "/admin/users/:id/promote", "Promote a user to provided role."
       param :id, String, :desc => 'The ID of the user to promote.', :required => true
