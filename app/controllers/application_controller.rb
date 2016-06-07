@@ -1,5 +1,7 @@
 class ApplicationController < ActionController::Base
-  protect_from_forgery :with => :exception
+  #Skipped for usage as API with Basic authentication
+  #protect_from_forgery :with => :exception
+
   layout :layout_by_resource
   before_filter :check_ssl_used
 
