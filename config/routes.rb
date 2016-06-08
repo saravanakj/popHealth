@@ -59,6 +59,10 @@ PopHealth::Application.routes.draw do
     get 'reports/measures_spreadsheet', :to =>'reports#measures_spreadsheet'
     get 'teams/team_providers/:id', :to => 'teams#team_providers'
     get 'reports/team_report', :to => 'reports#team_report'
+    post 'get_user_by_username', :to => "admin/users#get_user"
+    get 'get_all_measures', :to => "measures#get_all_measures"
+    get 'admin/users/:id/preferences', :to => "admin/users#get_preferences"
+    post 'admin/users/:id/preferences', :to => "admin/users#update_preferences"
     
     resources :practices
     resources :teams

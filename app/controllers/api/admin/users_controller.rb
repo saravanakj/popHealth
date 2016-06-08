@@ -26,7 +26,17 @@ module Api
         users = User.all.ordered_by_username
         render json: paginate(admin_users_path,users)
       end
-            
+
+      api :POST, "/admin/users", "Get user by name."
+      param :username, String, :desc => 'The name of the user in database.', :required => true
+      formats ['json']
+      example '{"_id":"53bab4134d4d31c98d0a0000","admin":null,"agree_license":null,"approved":false,"company":"","company_url":"","disabled":false,"effective_date":null,"email":"email@email.com","first_name":"fname","last_name":"lname","npi":"","registry_id":"","registry_name":"","staff_role":true,"tin":"","username":"user"}'
+      description "Returns a user in the database for the given name."
+      def get_user
+        user = User.where(:username => params[:username]).first
+        render json: user
+      end
+
       api :GET, "/admin/users/:id/preferences", "Get user preferences by user id."
       formats ['json']
       description "Returns a user preferences in the database for the given user id."
@@ -40,10 +50,10 @@ module Api
       description "Updates preference and returns updated preference in the database for the given user id."
       def update_preferences
         preferences = Preference.where(:user_id => params[:id]).first
-	      preferences["selected_measure_ids"] = params[:selected_measure_ids] || []
+	preferences["selected_measure_ids"] = params[:selected_measure_ids] || []
         preferences["dashboard_measure_ids"] = params[:dashboard_measure_ids] || []
         preferences["measure_goals"] = params[:measure_goals] || []
-	      preferences.save
+	preferences.save
         render json: preferences
       end
 
