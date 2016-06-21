@@ -63,7 +63,9 @@ PopHealth::Application.routes.draw do
     get 'get_all_measures', :to => "measures#get_all_measures"
     get 'admin/users/:id/preferences', :to => "admin/users#get_preferences"
     post 'admin/users/:id/preferences', :to => "admin/users#update_preferences"
-    
+    get 'admin/options/race', :to => "admin/options#get_races"
+    get 'admin/options/ethnicity', :to => "admin/options#get_ethnicities"
+
     resources :practices
     resources :teams
     namespace :admin do
