@@ -75,11 +75,16 @@ module Api
       rp = ReportingPeriod.where(start_date: start_date, end_date: end_date).first_or_create
       rp.save!
 
-	    options[:start_date] = start_date
+      options[:start_date] = start_date
       options[:effective_date] = end_date
       options[:test_id] = rp._id
       options['prefilter'] = build_mr_prefilter if APP_CONFIG['use_map_reduce_prefilter']
       
+      if (params.has_key?(:practice_id))
+        options['prefilter'] = options['prefilter'] || {}
+        options['prefilter']['practice_id'] = BSON::ObjectId.from_string(params[:practice_id])
+      end 
+
       qr = QME::QualityReport.find_or_create(params[:measure_id],
                                            params[:sub_id], options)
       if !qr.calculated?
