@@ -164,7 +164,8 @@ module Api
 
   private
     def build_filter
-      @filter = params.select { |k, v| %w(providers).include? k }.to_options
+      #@filter = params.select { |k, v| %w(providers).include? k }.to_options
+      @filter = params.select { |k, v| ["providers","genders","races","ethnicities"].include? k }
     end
 
     def authorize_providers
