@@ -45,7 +45,7 @@ module Api
     example '{"_id":"52fbbf34b99cc8a728000068","birthdate":1276869600,"first":"John","gender":"M","last":"Peters","encounters":[{...}], ...}'
     def show
       json_methods = [:language_names]
-      json_methods << :cache_results if params[:include_results]
+      #json_methods << :cache_results if params[:include_results]
       json = @patient.as_json({methods: json_methods})
       json["race"]["name"] = race(@patient) if json["race"]
       json["ethnicity"]["name"] = ethnicity(@patient) if json["ethnicity"]
@@ -57,7 +57,9 @@ module Api
           end
         end
       end
-      if results = json.delete('cache_results')
+      #if results = json.delete('cache_results')
+      if params[:include_results]
+        results = @patient.cache_results(params)
         json['measure_results'] = results_with_measure_metadata(results)
       end
       Log.create(:username =>   current_user.username,
