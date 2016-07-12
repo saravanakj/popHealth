@@ -38,7 +38,7 @@ module Api
       respond_with  paginate(api_patients_url,records)
     end
 
-    api :GET, "/patients/:id[?include_results=:include_results]", "Retrieve an individual patient"
+    api :GET, "/patients/:id[?include_results=:include_results&id_as_mrn=true]", "Retrieve an individual patient"
     formats ['json']
     param :id, String, :desc => "Patient ID", :required => true
     param :include_results, String, :desc => "Include measure calculation results", :required => false
@@ -114,7 +114,12 @@ module Api
     private
 
     def load_patient
-      @patient = Record.find(params[:id])
+      if params[:id] && params[:id_as_mrn] == "true"
+	      @patient = Record.where({ 'medical_record_number' => params[:id] + '_pid_' + current_user.practice_id.to_s }).first
+      elsif params[:id]
+        @patient = Record.find(params[:id])
+      end
+
       authorize! :read, @patient
     end
 
